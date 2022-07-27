@@ -1,12 +1,10 @@
 <template>
-  <div>
-    <router-view></router-view>
-  </div>
+    <div>咨询页面</div>
 </template>
 
 <script>
 export default {
-  name: 'App'
+
 }
 </script>
 
