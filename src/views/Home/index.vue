@@ -3,31 +3,34 @@
     <div class="swipe">
       <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
         <van-swipe-item v-for="item in list" :key="item.id">
-          <van-image width=" 100%" height="100%" :src="`http://liufusong.top:8080${item.imgSrc}`" />
+          <van-image
+            width=" 100%"
+            height="100%"
+            :src="`http://liufusong.top:8080${item.imgSrc}`"
+          />
         </van-swipe-item>
       </van-swipe>
     </div>
 
-
     <div class="search">
-
-      <van-search label="地址" placeholder="小区或地址">
-
+      <van-search placeholder="小区或地址">
+        <template #label>
+          <span @click="goCity">地址▼</span>
+        </template>
       </van-search>
     </div>
 
-
-
     <div>
       <van-grid>
-        <van-grid-item icon="wap-home-o" />
-        <van-grid-item icon="friends-o" />
+        <van-grid-item icon="wap-home-o" @click="goSearch" />
+        <van-grid-item icon="friends-o" @click="goSearch" />
         <van-grid-item icon="gem-o" />
+        <!-- <img src="~@/assets/imgs/1.png" alt="" /> -->
         <van-grid-item icon="service-o" />
       </van-grid>
     </div>
 
-    <div class="text" style="padding:0 10px;">
+    <div class="text" style="padding: 0 10px">
       <h3>租房小组</h3>
       <a href="#">更多</a>
     </div>
@@ -36,7 +39,7 @@
         <ul>
           <li v-for="item in listImg" :key="item.id">
             <div class="img">
-              <img :src="`http://liufusong.top:8080${item.imgSrc}`" alt="">
+              <img :src="`http://liufusong.top:8080${item.imgSrc}`" alt="" />
             </div>
             <div class="text">
               <p>{{ item.desc }}</p>
@@ -60,42 +63,53 @@
 export default {
   data() {
     return {
-
       list: [],
-      listImg: []
-    }
+      listImg: [],
+    };
   },
   mounted() {
     //轮播图的图片
-    this.getSwipe()
+    this.getSwipe();
 
     //租房小组的图片
-    this.getHouseTeam()
+    this.getHouseTeam();
   },
   methods: {
     async getSwipe() {
       try {
-        let result = await this.$API.reqSwiep()
+        let result = await this.$API.reqSwiep();
         // console.log(result);
-        this.list = result.data.body
+        this.list = result.data.body;
       } catch (error) {
         console.log(error);
       }
     },
 
     async getHouseTeam() {
-      let result = await this.$API.reqHouseTeam()
+      let result = await this.$API.reqHouseTeam();
       console.log(result);
-      this.listImg = result.data.body
-    }
+      this.listImg = result.data.body;
+    },
 
+    goSearch() {
+      // console.log(111);
+      this.$router.push({
+        path: "/layout/search",
+      });
+    },
 
+    //点击地址去到城市页面
+    goCity() {
+      // console.log(111);
+      this.$router.push({
+        path: "/city",
+      });
+    },
   },
-
-}
+};
 </script>
 
-<style>
+<style scoped>
 .search {
   position: absolute;
   top: 10px;
@@ -103,10 +117,8 @@ export default {
 }
 
 .van-search {
-  background: rgba(0, 0, 0, 0);
+  background-color: rgba(0, 0, 0, 0);
 }
-
-
 
 .my-swipe .van-swipe-item {
   color: rgb(36, 23, 23);
@@ -133,8 +145,6 @@ export default {
   /* height: 187px; */
   padding: 0 10px;
 }
-
-
 
 .tema li {
   display: inline-block;

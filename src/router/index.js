@@ -16,20 +16,32 @@ const routes = [
         redirect: '/layout/home',
         children: [
             {
-                path: '/layout/home',
+                path: 'home',
                 component: Home
             },
             {
-                path: '/layout/search',
+                path: 'search',
                 component: Search
             },
             {
-                path: '/layout/Consult',
+                path: 'Consult',
                 component: Consult
-            }
+            },
+            {
+                path: 'my',
+                component: () => import('@/views/My')
+            },
+            {
+                path: 'login',
+                component: () => import('@/views/Login')
+            },
+
         ]
     },
-
+    {
+        path: '/city',
+        component: () => import('@/views/City')
+    },
 ]
 const router = new VueRouter({
     routes
