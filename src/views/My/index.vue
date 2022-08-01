@@ -1,25 +1,35 @@
 <template>
   <div>
     <div>
+      <!-- <img :src="`http://liufusong.top:8080${info.avatar}`" alt="" style="width: 100%" v-if="isshow" /> -->
       <img src="~@/assets/imgs/bg.png" alt="" style="width: 100%" />
     </div>
 
+
+
     <div class="UserPanel">
       <div class="userAvatar">
-        <img src="~@/assets/imgs/avatar.png" alt="" style="width: 100%" />
+        <img :src="`http://liufusong.top:8080${info.avatar}`" alt="" style=" width: 100%" v-if="isshow" />
+        <img src="~@/assets/imgs/avatar.png" alt="" style=" width: 100%" v-else />
       </div>
       <div class="userAccount">
-        <p>游客</p>
-        <van-button type="primary" size="small" @click="goLogin"
-          >去登录</van-button
-        >
+        <div>
+          <p v-if="isshow">{{ info.nickname }}</p>
+          <p v-else>游客</p>
+        </div>
+
+        <div>
+          <van-button type="primary" size="small" @click="removeInfo" v-show="isshow">退出</van-button>
+          <van-button type="primary" size="small" @click="goLogin" v-show="!isshow">登录</van-button>
+        </div>
+        <p class="info" v-show="isshow">编辑个人资料▶</p>
       </div>
     </div>
 
     <div class="navList">
       <van-grid column-num="3" :border="false" gutter="1" :clickable="true">
-        <van-grid-item icon="star-o" text="我的收藏" />
-        <van-grid-item icon="wap-home-o" text="我的出租" />
+        <van-grid-item icon="star-o" text="我的收藏" to="/collection" />
+        <van-grid-item icon="wap-home-o" text="我的出租" to="/myrent" />
         <van-grid-item icon="underway-o" text="看房记录" />
         <van-grid-item icon="peer-pay" text="成为房主" />
         <van-grid-item icon="contact" text="个人资料" />
@@ -34,28 +44,71 @@
 </template>
 
 <script>
+import { Dialog } from 'vant';
+import { removeToken } from '@/utils/auth'
 export default {
   data() {
     return {
-      token: localStorage.getItem("token"),
+      info: {},
+      nickname: '游客',
+
     };
   },
   async mounted() {
     // console.log(this.token);
-    let result = await this.$API.reqUserInfo(this.token);
-    console.log(result);
+    let result = await this.$API.reqUserInfo();
+    // console.log(result);
+    this.info = result.data.body || {}
+
+
   },
+
+  computed: {
+
+    isshow() {
+      return (localStorage.getItem('HEIMA_HAOKE_TOKEN'))
+    }
+  },
+
   methods: {
     goLogin() {
       this.$router.push({
-        path: "/layout/login",
+        path: "/login",
       });
+
     },
+
+    //用户点击退出
+    removeInfo() {
+      Dialog.confirm({
+        title: '确定退出吗',
+        message: '是否确定退出',
+      })
+        .then(() => {
+          // on confirm
+          //退出之后清空信息
+          // this.$store.commit('SET_TOKEN', {})
+          //然后路由跳转到登录页
+          removeToken()
+        })
+        .catch(() => {
+          // on cancel
+        });
+
+
+    }
   },
+
 };
 </script>
 
 <style scoped>
+.info {
+  margin-top: 10px !important;
+  font-size: 13px !important;
+  color: #ccc !important;
+}
+
 .UserPanel {
   position: absolute;
   top: 135px;
@@ -66,6 +119,7 @@ export default {
   background-color: #fff;
   box-shadow: 0 0 10px 3px #ddd;
 }
+
 .userAvatar {
   position: relative;
   left: 126px;
@@ -77,6 +131,7 @@ export default {
   display: inline-block;
   box-shadow: 0 2px 2px #bdbdbd;
 }
+
 .userAccount {
   position: absolute;
   top: 48px;
@@ -85,14 +140,17 @@ export default {
   margin-left: 20px;
   text-align: center;
 }
+
 .userAccount p {
   font-size: 14px;
 }
+
 .van-button {
   margin-top: 18px;
   border-radius: 3px;
   width: 69px;
 }
+
 .navList {
   margin-top: 115px;
 }

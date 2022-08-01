@@ -19,18 +19,9 @@
 
     <!-- 列表 -->
     <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
-      <van-list
-        v-model="loading"
-        :finished="finished"
-        finished-text="没有更多了"
-        @load="onLoad"
-      >
-        <van-cell v-for="item in list" :key="item.id">
-          <van-image
-            width="100"
-            height="100"
-            :src="`http://liufusong.top:8080${item.houseImg}`"
-          />
+      <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
+        <van-cell v-for="item in list" :key="item.id" @click="goDetails(item.houseCode)">
+          <van-image width="100" height="100" :src="`http://liufusong.top:8080${item.houseImg}`" />
           <div class="listText">
             <p class="titleText title">{{ item.title }}</p>
             <p class="titleText info">{{ item.desc }}</p>
@@ -61,24 +52,23 @@ export default {
       value4: "c",
       option1: [
         { text: "区域", value: 0 },
-        { text: "方式", value: 1 },
-        { text: "租金", value: 2 },
-        { text: "筛选", value: 3 },
+        { text: "地铁", value: 1 },
+
       ],
       option2: [
-        { text: "默认排序", value: "a" },
-        { text: "好评排序", value: "b" },
-        { text: "销量排序", value: "c" },
+        { text: "方式", value: "a" },
+        { text: "租金", value: "b" },
+        { text: "筛选", value: "c" },
       ],
       option3: [
-        { text: "默认排序", value: "a" },
-        { text: "好评排序", value: "b" },
-        { text: "销量排序", value: "c" },
+        { text: "租金", value: "a" },
+        { text: "租金", value: "b" },
+        { text: "租金", value: "c" },
       ],
       option4: [
-        { text: "默认排序", value: "a" },
+        { text: "筛选", value: "a" },
         { text: "好评排序", value: "b" },
-        { text: "销量排序", value: "c" },
+        { text: "筛选", value: "c" },
       ],
     };
   },
@@ -87,6 +77,7 @@ export default {
     this.getHouseInfo();
   },
   methods: {
+
     async getHouseInfo() {
       let result = await this.$API.reqHouseInfo();
       console.log(result);
@@ -129,6 +120,18 @@ export default {
         path: "/city",
       });
     },
+
+    //点击列表去详情页
+    async goDetails(id) {
+      // console.log(id);
+      // console.log(result);
+      this.$router.push({
+        path: '/detailslist',
+        query: {
+          id: id
+        }
+      })
+    }
   },
 };
 </script>
@@ -137,35 +140,42 @@ export default {
 .searchBox {
   background-color: #21b97a;
 }
+
 .van-search {
   margin: 0 auto;
   width: 320px;
   background: #21b97a;
 }
+
 .left {
   position: absolute;
   top: 16px;
   left: 7px;
   font-size: 25px;
 }
+
 .map {
   position: absolute;
   top: 13px;
   right: 7px;
   font-size: 25px;
 }
+
 .listText {
   float: left;
 }
+
 .red {
   color: #fa5741;
 }
+
 .van-image {
   float: left;
   width: 106px;
   height: 80px;
   margin-right: 10px;
 }
+
 .titleText {
   width: 200px;
   white-space: nowrap;
@@ -176,10 +186,12 @@ export default {
 .title {
   font-weight: 700;
 }
+
 .info {
   font-size: 15px;
   color: #ccc;
 }
+
 .subway {
   width: 46px;
   height: 20px;

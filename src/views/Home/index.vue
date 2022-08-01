@@ -3,11 +3,7 @@
     <div class="swipe">
       <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
         <van-swipe-item v-for="item in list" :key="item.id">
-          <van-image
-            width=" 100%"
-            height="100%"
-            :src="`http://liufusong.top:8080${item.imgSrc}`"
-          />
+          <van-image width=" 100%" height="100%" :src="`http://liufusong.top:8080${item.imgSrc}`" />
         </van-swipe-item>
       </van-swipe>
     </div>
@@ -15,7 +11,7 @@
     <div class="search">
       <van-search placeholder="小区或地址">
         <template #label>
-          <span @click="goCity">地址▼</span>
+          <span @click="goCity">北京▼</span>
         </template>
       </van-search>
     </div>
@@ -63,6 +59,7 @@
 export default {
   data() {
     return {
+
       list: [],
       listImg: [],
     };
